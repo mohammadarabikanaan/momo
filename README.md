@@ -19,3 +19,27 @@ fi
 
 # Appel de la fonction avec l'adresse IP fournie
 check_connectivity "$1"
+
+
+
+# Fonction pour scanner les ports ouverts
+detect_open_ports() {
+    local ip="$1"
+    local start_port=1
+    local end_port=1024  # Plage de ports à tester
+
+    echo "Scanning ports on $ip..."
+    
+    for ((port=$start_port; port<=$end_port; port++)); do
+        nc -z -v -w1 "$ip" "$port" 2>&1 | grep -q "succeeded" && echo "Port $port is open"
+    done
+}
+
+# Vérification des arguments
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <IP_ADDRESS>"
+    exit 1
+fi
+
+# Appel de la fonction detect_open_ports avec l'IP fournie
+detect_open_ports "$1"
