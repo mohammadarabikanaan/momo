@@ -1,22 +1,21 @@
-# momo
-
 #!/bin/bash
 
-# Vérifier si une adresse IP est passée en argument
+# Fonction pour vérifier la connectivité réseau
+check_connectivity() {
+    local ip_address=$1
+    
+    if ping -c 4 "$ip_address" > /dev/null 2>&1; then
+        echo "Connexion réussie avec $ip_address"
+    else
+        echo "Échec de la connexion avec $ip_address"
+    fi
+}
+
+# Vérifier si une adresse IP est fournie en argument
 if [ -z "$1" ]; then
     echo "Usage: $0 <adresse_ip>"
     exit 1
 fi
 
-# Adresse IP fournie en argument
-IP="$1"
-
-# Vérification de la connectivité avec ping (3 paquets, timeout 2s)
-ping -c 3 -W 2 "$IP" > /dev/null 2>&1
-
-# Vérification du statut de la commande ping
-if [ $? -eq 0 ]; then
-    echo "Connexion réussie à $IP"
-else
-    echo "Échec de la connexion à $IP"
-fi
+# Appel de la fonction avec l'adresse IP fournie
+check_connectivity "$1"
